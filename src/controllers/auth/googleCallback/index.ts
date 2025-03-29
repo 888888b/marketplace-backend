@@ -1,4 +1,5 @@
-import { createUser, findEmailOnDb } from "@/services/user";
+import { findEmailOnDb } from "@/services/user/findUser";
+import { createUser } from "@/services/user/createUser";
 import { generateJwtToken } from "@/services/auth";
 import { Request, Response } from "express";
 import dotenv from 'dotenv';
@@ -20,7 +21,8 @@ export const googleAuthCallback = async (
     const {
         name,
         email,
-        picture
+        picture,
+        email_verified
     } = req.user._json;
 
     try {
@@ -28,7 +30,12 @@ export const googleAuthCallback = async (
         const query = await findEmailOnDb( email );
 
         if ( !query.length ) {
-            await createUser( name, email, picture );
+            await createUser({ 
+                name, 
+                email, 
+                picture,
+                verified: email_verified
+            });
         };
 
         // Criar JWT para o usuário autenticado

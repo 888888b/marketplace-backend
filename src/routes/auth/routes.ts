@@ -2,6 +2,7 @@ import express from "express";
 import passport from "@/middlewares/passport";
 import dotenv from "dotenv";
 import { googleAuthCallback } from "@/controllers/auth/googleCallback";
+import { registerController } from "@/controllers/auth/register";
 
 dotenv.config();
 
@@ -18,6 +19,11 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
   googleAuthCallback
+);
+
+router.post(
+  "/register",
+  registerController
 );
 
 export default router;
