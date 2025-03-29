@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "@/middlewares/passport";
 import dotenv from "dotenv";
-import { googleAuthCallback } from "@/controllers/authController";
+import { googleAuthCallback } from "@/controllers/auth/googleCallback";
 
 dotenv.config();
 
