@@ -7,6 +7,7 @@ type UserProps = {
     password?: string
     picture?: string
     phone?: string
+    googleId?: string
 };
 
 export const createUser = async ( user: UserProps ): Promise<void> => {
@@ -17,7 +18,8 @@ export const createUser = async ( user: UserProps ): Promise<void> => {
             password: user.password, 
             picture: user.picture, 
             phone: user.phone,
-            verified: user.verified 
+            verified: user.verified,
+            googleId: user.googleId 
         });
     } catch ( error: any ) {
         throw error;

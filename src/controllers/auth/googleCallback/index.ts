@@ -1,6 +1,8 @@
 import { findEmailOnDb } from "@/services/user/findUser";
 import { createUser } from "@/services/user/createUser";
+import { setGoogleId } from "@/services/user/updateUser";
 import { generateJwtToken } from "@/services/auth";
+
 import { Request, Response } from "express";
 import dotenv from 'dotenv';
 
@@ -28,20 +30,22 @@ export const googleAuthCallback = async (
     try {
         // verifica se ja existe o email no banco de dados
         const query = await findEmailOnDb( email );
-
-        if ( !query.length ) {
+        if ( !query ) {
             await createUser({ 
                 name, 
                 email, 
                 picture,
+                googleId: req.user.id,
                 verified: email_verified
             });
         };
 
-        // Criar JWT para o usuário autenticado
-        const token = generateJwtToken( req.user.id );
+        // caso exista uma conta de usuario com o email, é criado o campo 'googleId' que vincula a conta google a conta ja existente no banco de dados 
+        await setGoogleId( req.user.id, email );
 
-        res.clearCookie('token');
+        // Criar JWT para o usuário autenticado
+        const token = generateJwtToken( email );
+
         res.cookie('token', token, {
             httpOnly: true,
             secure: true,

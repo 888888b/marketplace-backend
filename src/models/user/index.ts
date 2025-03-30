@@ -26,6 +26,9 @@ const User = sequelize.define( "User", {
     phone: {
         type: DataTypes.STRING
     },
+    googleId: {
+        type: DataTypes.STRING
+    },
     verified: {
         type: DataTypes.BOOLEAN,
         allowNull: false
