@@ -18,7 +18,7 @@ export const registerController = async ( req: Request, res: Response ) => {
     // Verificar se o e-mail já existe
     const query = await findEmailOnDb( email );
     if ( query ) {
-      res.status( 400 ).json({ message: "This email address is already in use." });
+      res.status( 409 ).json({ message: "This email address is already in use." });
       return;
     };
 
