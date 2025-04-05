@@ -5,12 +5,12 @@ import passport from "passport";
 
 // Estratégia JWT
 passport.use(
-    new JwtStrategy(jwtOptions, async (user, done) => {
+    new JwtStrategy( jwtOptions, async ( user, done ) => {
         try {
-            return done(null, user);
-        } catch (error) {
-            return done(error, false);
-        }
+            return done( null, user );
+        } catch ( error ) {
+            return done( error, false );
+        };
     })
 );
 
