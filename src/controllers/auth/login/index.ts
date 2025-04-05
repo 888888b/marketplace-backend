@@ -47,7 +47,12 @@ export const loginController = async ( req: Request, res: Response ) => {
         maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ message: "User logged in successfully" });
+    // retorna os dados do usuario ao front end
+    const { name, picture, phone } = user?.dataValues;
+    res.status( 200 ).json({ 
+      message: "User logged in successfully",
+      user: { name, email, picture, phone }
+    });
 
   } catch ( error ) {
     console.error( error );

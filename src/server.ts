@@ -2,10 +2,12 @@ import express from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
 import passport from "@/middlewares/passport";
-import authRoutes from './routes/auth/routes';
 import cookieParser = require("cookie-parser");
 import fs from "node:fs";
 import https from "node:https";
+
+import authRoutes from './routes/auth/routes';
+import userRoutes from './routes/user/routes';
 
 dotenv.config();
 
@@ -24,11 +26,16 @@ const options = {
   cert: fs.readFileSync("C:/Windows/System32/localhost.pem"), // Certificado
 };
 
+// rota de entrada
 app.get("/", ( req, res ) => {
   res.send("API do Marketplace funcionando! 🚀");
 });
 
+// rotas de authenticação
 app.use('/auth', authRoutes );
+
+// rotas de usuario
+app.use('/users', userRoutes );
 
 const PORT = process.env.PORT || 5000;
 // Inicializa o servidor HTTPS

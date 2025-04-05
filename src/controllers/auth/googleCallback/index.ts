@@ -14,10 +14,14 @@ dotenv.config();
 
 export const googleAuthCallback = async (
     req: RequestProps, res: Response) => {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+    const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:3000';
+    const frontendGoogleCallback = process.env.FRONTEND_GOOGLE_CALLBACK || '/api/auth/google';
 
     if (!req.user) {
-        return res.redirect(`${frontendUrl}/login?status=authentication_failed`);
+        return res.redirect(
+            `${frontendUrl}${frontendGoogleCallback}?status=authentication_failed`
+        );
     };
 
     const {
@@ -40,7 +44,8 @@ export const googleAuthCallback = async (
             });
         };
 
-        // caso exista uma conta de usuario com o email, é criado o campo 'googleId' que vincula a conta google a conta ja existente no banco de dados 
+        // caso exista uma conta de usuario com o email, é criado o campo 'googleId' 
+        // que vincula a conta google a conta ja existente no banco de dados 
         await setGoogleId( req.user.id, email );
 
         // Criar JWT para o usuário autenticado
@@ -54,10 +59,15 @@ export const googleAuthCallback = async (
         });
 
         // redireciona para o front e envia o token para de acesso
-        return res.redirect(`${frontendUrl}/login?status=successful`);
+        return res.redirect(
+            `${frontendUrl}${frontendGoogleCallback}?status=successful`
+        );
+
     } catch ( error ) {
         console.error( error );
         // redireciona para o front e sinaliza que houve erro
-        return res.redirect(`${frontendUrl}/login?status=internal_error`);
+        return res.redirect(
+            `${frontendUrl}${frontendGoogleCallback}?status=internal_error`
+        );
     };
 };
