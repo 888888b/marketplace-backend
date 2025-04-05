@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { googleAuthCallback } from "@/controllers/auth/googleCallback";
 import { registerController } from "@/controllers/auth/register";
 import { loginController } from "@/controllers/auth/login";
+import { logoutController } from "@/controllers/auth/logout";
 
 dotenv.config();
 
@@ -31,6 +32,12 @@ router.post(
 router.post(
   "/login",
   loginController
+);
+
+router.get(
+  "/logout",
+  passport.authenticate("jwt", { session: false }),
+  logoutController
 );
 
 export default router;
