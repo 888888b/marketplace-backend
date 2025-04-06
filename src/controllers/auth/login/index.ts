@@ -36,8 +36,11 @@ export const loginController = async ( req: Request, res: Response ) => {
         return;
     };
 
+    // retorna os dados do usuario ao front end
+    const { id, name, picture, phone } = user?.dataValues;
+
     // Gera o token JWT
-    const token = generateJwtToken( email );
+    const token = generateJwtToken( id );
 
     // definir cookie http only
     res.cookie('token', token, {
@@ -47,11 +50,10 @@ export const loginController = async ( req: Request, res: Response ) => {
         maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // retorna os dados do usuario ao front end
-    const { name, picture, phone } = user?.dataValues;
+    // retorna os dados do usuario
     res.status( 200 ).json({ 
       message: "User logged in successfully",
-      user: { name, email, picture, phone }
+      user: { id, name, email, picture, phone }
     });
 
   } catch ( error ) {

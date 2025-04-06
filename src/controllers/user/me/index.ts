@@ -9,11 +9,11 @@ export const getUserController = async ( req: Request, res: Response ) => {
         return;
     };
 
-    const userEmail = req.user.sub as string
+    const idFromToken = req.user.sub as string
 
     try {
         // busca o usuario no banco de dados
-        const user = await User.findOne({ where: { email: userEmail }});
+        const user = await User.findOne({ where: { id: idFromToken }});
 
         // caso o usuario nao exista retorna um erro 
         if ( !user ) {
@@ -22,8 +22,8 @@ export const getUserController = async ( req: Request, res: Response ) => {
         };
 
         // rotarna os dados ao front end
-        const { name, email, picture, phone } = user?.dataValues;
-        res.status( 200 ).json({ user: { name, email, picture, phone }});
+        const { id, name, email, picture, phone } = user?.dataValues;
+        res.status( 200 ).json({ user: { id, name, email, picture, phone }});
 
     } catch ( error ) {
         console.error( error );

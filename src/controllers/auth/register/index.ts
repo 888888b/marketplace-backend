@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { createUser } from "@/services/user/createUser";
 import { generateJwtToken } from "@/services/auth";
-import { findEmailOnDb } from "@/services/user/findUser";
+import { findUserInDb } from "@/services/user/findUser";
 
 export const registerController = async ( req: Request, res: Response ) => {
   try {
@@ -16,8 +16,8 @@ export const registerController = async ( req: Request, res: Response ) => {
     };
 
     // Verificar se o e-mail já existe
-    const query = await findEmailOnDb( email );
-    if ( query ) {
+    const user = await findUserInDb({ email });
+    if ( user ) {
       res.status( 409 ).json({ message: "This email address is already in use." });
       return;
     };
@@ -26,8 +26,8 @@ export const registerController = async ( req: Request, res: Response ) => {
     const salt = await bcrypt.genSalt( 10 );
     const hashedPassword = await bcrypt.hash( password, salt );
 
-    // Criar usuário no banco
-    await createUser({
+    // Criar usuário no banco de dados
+    const newUser = await createUser({
         name,
         email,
         password: hashedPassword,
@@ -35,7 +35,7 @@ export const registerController = async ( req: Request, res: Response ) => {
     });
 
     // Gerar um token JWT
-    const token = generateJwtToken( email );
+    const token = generateJwtToken( newUser.dataValues.id );
 
     // definir cookie http only
     res.cookie('token', token, {

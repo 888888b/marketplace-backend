@@ -1,4 +1,4 @@
-import { findEmailOnDb } from "@/services/user/findUser";
+import { findUserInDb } from "@/services/user/findUser";
 import { createUser } from "@/services/user/createUser";
 import { setGoogleId } from "@/services/user/updateUser";
 import { generateJwtToken } from "@/services/auth";
@@ -18,13 +18,14 @@ export const googleAuthCallback = async (
     const frontendUrl = process.env.FRONTEND_URL || 'https://localhost:3000';
     const frontendGoogleCallback = process.env.FRONTEND_GOOGLE_CALLBACK || '/api/auth/google';
 
-    if (!req.user) {
+    if ( !req.user ) {
         return res.redirect(
             `${frontendUrl}${frontendGoogleCallback}?status=authentication_failed`
         );
     };
 
     const {
+        sub, // id google do usuario 
         name,
         email,
         picture,
@@ -33,23 +34,27 @@ export const googleAuthCallback = async (
 
     try {
         // verifica se ja existe o email no banco de dados
-        const query = await findEmailOnDb( email );
-        if ( !query ) {
-            await createUser({ 
+        const user = await findUserInDb({ googleId: sub, email });
+        let userIdInDb: null | string = null;
+
+        if ( !user ) {
+            const newUser = await createUser({ 
                 name, 
                 email, 
                 picture,
-                googleId: req.user.id,
+                googleId: sub,
                 verified: email_verified
             });
+
+            userIdInDb = newUser.dataValues.id;
+        } else {
+            // caso exista uma conta de usuario com o email ou id, é criado o campo 'googleId' 
+            // que vincula a conta google a conta ja existente no banco de dados 
+            await setGoogleId( sub, email );
         };
 
-        // caso exista uma conta de usuario com o email, é criado o campo 'googleId' 
-        // que vincula a conta google a conta ja existente no banco de dados 
-        await setGoogleId( req.user.id, email );
-
         // Criar JWT para o usuário autenticado
-        const token = generateJwtToken( email );
+        const token = generateJwtToken( userIdInDb || user?.dataValues.id );
 
         res.cookie('token', token, {
             httpOnly: true,

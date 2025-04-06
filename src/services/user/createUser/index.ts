@@ -1,4 +1,5 @@
 import User from "@/models/user";
+import { Model } from "sequelize";
 
 type UserProps = {
     name: string 
@@ -10,9 +11,11 @@ type UserProps = {
     googleId?: string
 };
 
-export const createUser = async ( user: UserProps ): Promise<void> => {
+export const createUser = async ( user: UserProps )
+: Promise<Model<any, any>> => {
+
     try {
-        await User.create({ 
+        const newUser = await User.create({ 
             name: user.name, 
             email: user.email,
             password: user.password, 
@@ -21,6 +24,9 @@ export const createUser = async ( user: UserProps ): Promise<void> => {
             verified: user.verified,
             googleId: user.googleId 
         });
+
+        return newUser;
+
     } catch ( error: any ) {
         throw error;
     };

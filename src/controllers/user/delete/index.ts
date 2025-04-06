@@ -9,10 +9,10 @@ export const deleteUserController = async ( req: Request, res: Response ) => {
         return;
     };
 
-    const email = req.user.sub as string
+    const id = req.user.sub as string
 
     try {
-        await User.destroy({ where: { email }});
+        await User.destroy({ where: { id }});
         res.clearCookie('token');
         res.status( 200 ).json({ message: "User successfully deleted" });
 
