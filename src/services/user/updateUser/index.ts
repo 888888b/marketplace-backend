@@ -1,4 +1,4 @@
-import User from "@/models/user";
+import { User } from '@/models/relations';
 
 export const setGoogleId = async ( googleId: string, email: string ) => {
     try {

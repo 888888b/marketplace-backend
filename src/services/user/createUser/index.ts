@@ -1,4 +1,4 @@
-import User from "@/models/user";
+import { User } from '@/models/relations';
 import { Model } from "sequelize";
 
 type UserProps = {

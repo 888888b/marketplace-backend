@@ -1,5 +1,5 @@
 import { Model, Op } from "sequelize";
-import User from "@/models/user";
+import { User } from '@/models/relations';
 
 type UserProps = {
     id?: string
