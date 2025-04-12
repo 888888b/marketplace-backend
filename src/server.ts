@@ -8,6 +8,7 @@ import https from "node:https";
 
 import authRoutes from './routes/auth/routes';
 import userRoutes from './routes/user/routes';
+import storeRoutes from './routes/store/routes';
 
 dotenv.config();
 
@@ -36,6 +37,9 @@ app.use('/auth', authRoutes );
 
 // rotas de usuario
 app.use('/users', userRoutes );
+
+// rotas de lojas
+app.use('/stores', storeRoutes );
 
 const PORT = process.env.PORT || 5000;
 // Inicializa o servidor HTTPS
