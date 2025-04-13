@@ -1,3 +1,4 @@
+// tools
 import express from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
@@ -6,9 +7,11 @@ import cookieParser = require("cookie-parser");
 import fs from "node:fs";
 import https from "node:https";
 
+// rotas
 import authRoutes from './routes/auth/routes';
 import userRoutes from './routes/user/routes';
 import storeRoutes from './routes/store/routes';
+import productRoutes from './routes/product/routes';
 
 dotenv.config();
 
@@ -40,6 +43,9 @@ app.use('/users', userRoutes );
 
 // rotas de lojas
 app.use('/stores', storeRoutes );
+
+// rotas de produto
+app.use('/products', productRoutes );
 
 const PORT = process.env.PORT || 5000;
 // Inicializa o servidor HTTPS
