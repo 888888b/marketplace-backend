@@ -5,6 +5,7 @@ import passport from "@/middlewares/passport";
 // controllers
 import { createProductController } from "@/controllers/product/create";
 import { deleteProductController } from "@/controllers/product/delete";
+import { getProductsController } from "@/controllers/product/get";
 
 const router = Router();
 
@@ -24,8 +25,9 @@ router.delete(
 
 // obter dados do produto
 router.get(
-    "",
-    passport.authenticate('jwt', { session: false })
+    "/:storeId",
+    passport.authenticate('jwt', { session: false }),
+    getProductsController
 );
 
 export default router;
