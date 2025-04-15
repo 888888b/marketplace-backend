@@ -12,6 +12,7 @@ import authRoutes from './routes/auth/routes';
 import userRoutes from './routes/user/routes';
 import storeRoutes from './routes/store/routes';
 import productRoutes from './routes/product/routes';
+import searchRoutes from './routes/search/routes';
 
 dotenv.config();
 
@@ -46,6 +47,9 @@ app.use('/stores', storeRoutes );
 
 // rotas de produto
 app.use('/products', productRoutes );
+
+// rotas de pesquisa 
+app.use('/search', searchRoutes );
 
 const PORT = process.env.PORT || 5000;
 // Inicializa o servidor HTTPS
