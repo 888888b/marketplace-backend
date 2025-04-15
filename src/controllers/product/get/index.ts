@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Product, Store } from '@/models/relations';
+import { Product, ProductImage } from '@/models/relations';
 import { isUUID } from 'validator';
 
 export const getProductsController = async ( req: Request, res: Response ) => {
@@ -30,6 +30,13 @@ export const getProductsController = async ( req: Request, res: Response ) => {
             where: { storeId },
             offset,
             limit: maxLimit,
+            include: [
+                {
+                    model: ProductImage,
+                    as: 'images',
+                    attributes: ['id', 'imageUrl']
+                }
+            ],
             attributes: ['id', 'name', 'description', 'price'],
         });
 
