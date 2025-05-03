@@ -137,3 +137,6 @@ dist
 
 # docker
 docker-compose.yml
+
+# certificates
+cert

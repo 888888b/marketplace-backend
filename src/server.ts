@@ -26,12 +26,6 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(cookieParser());
 
-// Carrega os certificados SSL
-const options = {
-  key: fs.readFileSync("C:/Windows/System32/localhost-key.pem"), // Chave privada
-  cert: fs.readFileSync("C:/Windows/System32/localhost.pem"), // Certificado
-};
-
 // rota de entrada
 app.get("/", ( req, res ) => {
   res.send("API do Marketplace funcionando! 🚀");
@@ -53,7 +47,23 @@ app.use('/products', productRoutes );
 app.use('/search', searchRoutes );
 
 const PORT = process.env.PORT || 5000;
-// Inicializa o servidor HTTPS
-https.createServer(options, app).listen( PORT, () => {
-  console.log(`Servidor rodando em https://localhost:${PORT} 🚀`);
-});
+
+// config para desenvolvimento
+if ( process.env.NODE_ENV === 'development' ) {
+  // Carrega os certificados SSL
+  const options = {
+    key: fs.readFileSync("./cert/localhost-key.pem"), // Chave privada
+    cert: fs.readFileSync("./cert/localhost.pem"), // Certificado
+  };
+
+  // Inicializa o servidor HTTPS
+  https.createServer( options, app ).listen( PORT, () => {
+    console.log(`Servidor rodando em https://localhost:${PORT} 🚀`);
+  });
+
+  // config para produção
+} else {
+  app.listen( PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT} 🚀`);
+  });
+};
