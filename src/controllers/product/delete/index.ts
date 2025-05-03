@@ -6,7 +6,7 @@ export const deleteProductController = async ( req: Request, res: Response ) => 
     
     const userId = req.user?.sub as string;
     const { productId } = req.params;
-
+    
     // verifica se o token existe
     if ( !req.user || !userId ) {
         res.status( 401 ).json({ message: "Invalid or non-existent token" });

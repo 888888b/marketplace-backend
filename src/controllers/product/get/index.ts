@@ -10,7 +10,6 @@ export const getProductsController = async ( req: Request, res: Response ) => {
     const maxPage = Math.max(Number(page) || 1, 1);
     const maxLimit = Math.min(Math.max(Number(limit) || 10, 1), 10);
     const offset = (maxPage - 1) * maxLimit;
-    const userId = req.user.id as string;
 
     // verifica se o parametro storeId foi passado na query
     if ( !storeId || !isUUID( storeId )) {
