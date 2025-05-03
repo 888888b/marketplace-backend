@@ -5,7 +5,7 @@ import { getStoreData } from '@/services/store/get';
 
 export const createProductController = async ( req: Request, res: Response ) => {
     
-    const userId = req.user.sub as string;
+    const userId = req.user?.sub as string;
     const { name, description, price, images } = req.body;
 
     // verifica se o token existe

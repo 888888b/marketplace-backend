@@ -3,7 +3,7 @@ import { getStoreData } from "@/services/store/get";
 
 export const getStoreController = async (req: Request, res: Response) => {
 
-    const userId = req.user.sub as string;
+    const userId = req.user?.sub as string;
 
     // verifica se o token existe
     if ( !req.user ) {

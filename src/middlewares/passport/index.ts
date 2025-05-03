@@ -22,9 +22,9 @@ passport.use(
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
             callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
         },
-        async (accessToken, refreshToken, profile, done) => {
+        async ( accessToken, refreshToken, user, done ) => {
             try {
-                return done(null, profile);
+                return done(null, user);
             } catch (error) {
                 return done(error, false);
             }
