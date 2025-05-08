@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
-import { generateJwtToken } from "@/services/auth";
+import { generateJwtToken, generateAccessToken } from "@/services/auth";
 import { User } from '@/models/relations';
 
 export const loginController = async ( req: Request, res: Response ) => {
@@ -37,10 +37,11 @@ export const loginController = async ( req: Request, res: Response ) => {
     };
 
     // retorna os dados do usuario ao front end
-    const { id, name, picture, phone } = user?.dataValues;
+    const { id, name, picture, phone, role } = user?.dataValues;
 
     // Gera o token JWT
     const token = generateJwtToken( id );
+    const accessToken = generateAccessToken( id, role );
 
     // definir cookie http only
     res.cookie('token', token, {
@@ -49,6 +50,14 @@ export const loginController = async ( req: Request, res: Response ) => {
         sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
     });
+
+    // access token
+    res.cookie('access_token', accessToken, {
+      httpOnly: false,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000,
+  });
 
     // retorna os dados do usuario
     res.status( 200 ).json({ 

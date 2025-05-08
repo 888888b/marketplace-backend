@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
 import { createUser } from "@/services/user/createUser";
-import { generateJwtToken } from "@/services/auth";
+import { generateJwtToken, generateAccessToken } from "@/services/auth";
 import { findUserInDb } from "@/services/user/findUser";
 
 export const registerController = async ( req: Request, res: Response ) => {
@@ -36,6 +36,10 @@ export const registerController = async ( req: Request, res: Response ) => {
 
     // Gerar um token JWT
     const token = generateJwtToken( newUser.dataValues.id );
+    const accessToken = generateAccessToken( 
+      newUser.dataValues.id, 
+      newUser.dataValues.role 
+    );
 
     // definir cookie http only
     res.cookie('token', token, {
@@ -44,6 +48,14 @@ export const registerController = async ( req: Request, res: Response ) => {
         sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
     });
+
+    // access token
+    res.cookie('access_token', accessToken, {
+      httpOnly: false,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000,
+  });
 
     // Retornar sucesso com os dados do usuário
     res.status( 201 ).json({

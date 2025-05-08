@@ -10,5 +10,6 @@ export const logoutController = ( req: Request, res: Response ) => {
 
     // limpa o token de acesso imposibilitando requisições futuras por parte do usuario
     res.clearCookie('token');
+    res.clearCookie('access_token');
     res.status( 200 ).json({ message: "user successfully logged out" });
 };

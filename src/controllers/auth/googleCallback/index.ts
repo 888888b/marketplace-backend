@@ -1,8 +1,9 @@
 import { findUserInDb } from "@/services/user/findUser";
 import { createUser } from "@/services/user/createUser";
 import { setGoogleId } from "@/services/user/updateUser";
-import { generateJwtToken } from "@/services/auth";
+import { generateJwtToken, generateAccessToken } from "@/services/auth";
 
+import { Model } from "sequelize";
 import { Request, Response } from "express";
 import dotenv from 'dotenv';
 
@@ -34,8 +35,7 @@ export const googleAuthCallback = async (
 
     try {
         // verifica se ja existe o email no banco de dados
-        const user = await findUserInDb({ googleId: sub, email });
-        let userIdInDb: null | string = null;
+        let user = await findUserInDb({ googleId: sub, email });
 
         if ( !user ) {
             const newUser = await createUser({ 
@@ -46,18 +46,28 @@ export const googleAuthCallback = async (
                 verified: email_verified
             });
 
-            userIdInDb = newUser.dataValues.id;
+            user = Object.assign({}, newUser);
         } else {
             // caso exista uma conta de usuario com o email ou id, é criado o campo 'googleId' 
             // que vincula a conta google a conta ja existente no banco de dados 
             await setGoogleId( sub, email );
         };
 
-        // Criar JWT para o usuário autenticado
-        const token = generateJwtToken( userIdInDb || user?.dataValues.id );
-
+        // Criar JWT e token de acesso para o usuário autenticado
+        const token = generateJwtToken( user.dataValues.id );
+        const accessToken = generateAccessToken( user.dataValues.id, user.dataValues.role );
+        
+        // refresh token
         res.cookie('token', token, {
             httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        // access token
+        res.cookie('access_token', accessToken, {
+            httpOnly: false,
             secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000,
