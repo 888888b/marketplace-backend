@@ -63,6 +63,8 @@ export const googleAuthCallback = async (
             secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000,
+            domain: '.communa.com.br',
+            path: "/"
         });
 
         // access token
@@ -71,6 +73,8 @@ export const googleAuthCallback = async (
             secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000,
+            domain: '.communa.com.br',
+            path: "/"
         });
 
         // redireciona para o front e envia o token para de acesso

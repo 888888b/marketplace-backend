@@ -47,6 +47,8 @@ export const registerController = async ( req: Request, res: Response ) => {
         secure: true,
         sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
+        domain: '.communa.com.br',
+        path: "/"
     });
 
     // access token
@@ -55,6 +57,8 @@ export const registerController = async ( req: Request, res: Response ) => {
       secure: true,
       sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000,
+      domain: '.communa.com.br',
+      path: "/"
   });
 
     // Retornar sucesso com os dados do usuário
